@@ -106,8 +106,6 @@ class CpPhy(object):
 			self.__txQueueTelegrams[da] = None
 			telegramData = telegram.getRawData()
 			self.__allocateBus(now, len(telegramData), maxReplyLen)
-			if self.debug:
-				print("PHY: sending (%s)" % (repr(telegram)))
 			self.sendData(telegramData, srd)
 
 	def send(self, telegram, srd, maxReplyLen=-1):

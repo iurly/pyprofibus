@@ -1,4 +1,3 @@
-
 # -*- coding: utf-8 -*-
 #
 # PROFIBUS DP - Master
@@ -160,7 +159,6 @@ class DpSlaveDesc(object):
 		"index",
 		"name",
 		"chkCfgTelegram",
-		"getCfgTelegram",
 		"dpm",
 		"gsd",
 		"identNumber",
@@ -192,9 +190,6 @@ class DpSlaveDesc(object):
 
 		# Prepare a Chk_Cfg telegram.
 		self.chkCfgTelegram = DpTelegram_ChkCfg_Req(
-					da = self.slaveAddr,
-					sa = None)
-		self.getCfgTelegram = DpTelegram_GetCfg_Req(
 					da = self.slaveAddr,
 					sa = None)
 
@@ -505,10 +500,6 @@ class DpMaster(object):
 
 		if (not slave.pendingReq or
 		    slave.pendingReqTimeout.exceed()):
-#			slave.slaveDesc.getCfgTelegram.sa = self.masterAddr
-#			ok = self.__send(slave,
-#					 telegram=slave.slaveDesc.getCfgTelegram,
-#					 timeout=0.05)
 			slave.slaveDesc.chkCfgTelegram.sa = self.masterAddr
 			ok = self.__send(slave,
 					 telegram=slave.slaveDesc.chkCfgTelegram,
