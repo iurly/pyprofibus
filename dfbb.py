@@ -5,12 +5,13 @@
 #
 
 import pyprofibus
+import time
 
 def main(watchdog=None):
 	master = None
 	try:
 		# Parse the config file.
-		config = pyprofibus.PbConf.fromFile("example_dummy.conf")
+		config = pyprofibus.PbConf.fromFile("dfbb.conf")
 
 		# Create a DP master.
 		master = config.makeDPM()
@@ -35,13 +36,18 @@ def main(watchdog=None):
 			master.addSlave(slaveDesc)
 
 			# Set initial output data.
-			outData[slaveDesc.name] = bytearray((0x42, 0x24))
+			outData[slaveDesc.name] = bytearray((0xA2, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+				0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+				0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+				0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+			))
 
 		# Initialize the DPM
 		master.initialize()
 
 		# Run the slave state machine.
 		while True:
+			#time.sleep(.1)
 			# Write the output data.
 			for slaveDesc in master.getSlaveList():
 				slaveDesc.setOutData(outData[slaveDesc.name])
@@ -53,9 +59,10 @@ def main(watchdog=None):
 			if handledSlaveDesc:
 				inData = handledSlaveDesc.getInData()
 				if inData is not None:
+					print("Received data: " + str(inData))
 					# In our example the output data shall be the inverted input.
-					outData[handledSlaveDesc.name][0] = inData[1]
-					outData[handledSlaveDesc.name][1] = inData[0]
+					#outData[handledSlaveDesc.name][0] = inData[1]
+					#outData[handledSlaveDesc.name][1] = inData[0]
 
 			# Feed the system watchdog, if it is available.
 			if watchdog is not None:

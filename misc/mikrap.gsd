@@ -1,0 +1,360 @@
+;*************************************************************************
+;***                                                                   ***
+;***      Hilscher Gesellschaft fuer Systemautomation mbH              ***
+;***      PROFIBUS DP - Developement                                   ***
+;***      B. Poertner                                                  ***
+;***      D-65795 Hattersheim                                          ***
+;***      Rheinstrasse 15                                              ***
+;***      Hotline: 06190/9907-99                                       ***
+;***          Fax: 06190/9907-50                                       ***
+;***                                                                   ***
+;*************************************************************************
+;***                                                                   ***
+;***      Filename: HIL_06E7.GSD                  (c) 2002             ***
+;***      GSD file version 2 from  04.06.2002                          ***
+;***                                                                   ***
+;*************************************************************************
+;
+;      ATTENTION:
+;      ==========
+;      Changes in this file can cause configuration or communicationproblems.
+;      This file is compatible to the firmware of the device.
+;
+;      Changes
+;      =======
+;      04.06.02   V1.000  B. Poertner
+;      -  created
+
+#Profibus_DP
+
+GSD_Revision        = 1
+Vendor_Name         = "Hilscher GmbH"
+Model_Name          = "EC1-DEB-DPS"
+Revision            = "Version 1.000"
+Ident_Number        = 0x06E7
+Protocol_Ident      = 0
+Station_Type        = 0
+Hardware_Release    = "Version 1.000"
+Software_Release    = "Version 1.000"
+Implementation_Type = "ASPC2"
+9.6_supp            = 1
+19.2_supp           = 1
+93.75_supp          = 1
+187.5_supp          = 1
+500_supp            = 1
+1.5M_supp           = 1
+3M_supp             = 1
+6M_supp             = 1
+12M_supp            = 1
+MaxTsdr_9.6         = 60
+MaxTsdr_19.2        = 60
+MaxTsdr_93.75       = 60
+MaxTsdr_187.5       = 60
+MaxTsdr_500         = 100
+MaxTsdr_1.5M        = 150
+MaxTsdr_3M          = 250
+MaxTsdr_6M          = 450
+MaxTsdr_12M         = 800
+Redundancy          = 0
+Repeater_Ctrl_Sig   = 0
+24V_Pins            = 0
+Freeze_Mode_supp    = 1
+Sync_Mode_supp      = 1
+Auto_Baud_supp      = 1
+Set_Slave_Add_supp  = 0
+Min_Slave_Intervall = 10
+Modular_Station     = 1
+Max_Module          = 24
+Max_Input_Len       = 244
+Max_Output_Len      = 244
+Max_Data_Len        = 488
+Max_Diag_Data_Len   = 244
+Slave_Family        = 0        ;common
+
+Bitmap_Device = "EC1DPS_R"
+Bitmap_Diag   = "EC1DPS_D"
+Bitmap_SF     = "EC1DPS_S"
+
+User_Prm_Data_Len   = 3
+User_Prm_Data       = 0x00,0xFC,0x07
+
+
+
+PrmText = 1
+Text(0) = "Disable"
+Text(1) = "Enable"
+EndPrmText
+
+PrmText = 2
+Text(0) = "OFF"
+Text(1) = "ON"
+EndPrmText
+
+PrmText = 3
+Text(0) = "1 alarm of each type"
+Text(1) = "2 alarms in total"
+Text(2) = "4 alarms in total"
+Text(3) = "8 alarms in total"
+Text(4) = "12 alarms in total"
+Text(5) = "16 alarms in total"
+Text(6) = "24 alarms in total"
+Text(7) = "32 alarms in total"
+EndPrmText
+
+ExtUserPrmData = 1 "DPV1"
+Bit(7) 0 0-1
+Prm_Text_Ref = 1
+EndExtUserPrmData
+
+ExtUserPrmData = 2 "Fail Safe"
+Bit(6) 0 0-1
+Prm_Text_Ref = 2
+EndExtUserPrmData
+
+ExtUserPrmData = 3 "Pull Plug Alarm"
+Bit(7) 1 0-1
+Prm_Text_Ref = 2
+EndExtUserPrmData
+
+ExtUserPrmData = 4 "Process Alarm"
+Bit(6) 1 0-1
+Prm_Text_Ref = 2
+EndExtUserPrmData
+
+ExtUserPrmData = 5 "Diagnostic Alarm"
+Bit(5) 1 0-1
+Prm_Text_Ref = 2
+EndExtUserPrmData
+
+ExtUserPrmData = 6 "Manufacturer Specific Alarm"
+Bit(4) 1 0-1
+Prm_Text_Ref = 2
+EndExtUserPrmData
+
+ExtUserPrmData = 7 "Status Alarm"
+Bit(3) 1 0-1
+Prm_Text_Ref = 2
+EndExtUserPrmData
+
+ExtUserPrmData = 8 "Update Alarm"
+Bit(2) 1 0-1
+Prm_Text_Ref = 2
+EndExtUserPrmData
+
+ExtUserPrmData = 9 "Alarm Mode"
+BitArea(0-2) 7 0-7
+Prm_Text_Ref = 3
+EndExtUserPrmData
+
+Ext_User_Prm_Data_Ref(0) = 1
+Ext_User_Prm_Data_Ref(0) = 2
+Ext_User_Prm_Data_Ref(1) = 3
+Ext_User_Prm_Data_Ref(1) = 4
+Ext_User_Prm_Data_Ref(1) = 5
+Ext_User_Prm_Data_Ref(1) = 6
+Ext_User_Prm_Data_Ref(1) = 7
+Ext_User_Prm_Data_Ref(1) = 8
+Ext_User_Prm_Data_Ref(2) = 9
+
+Module = "blank space (0x00)" 0x00
+EndModule
+
+;*************************************************************************
+;***                input byte with consistence                        ***
+;*************************************************************************
+
+Module = "1  byte input con  (0x90)" 0x90
+EndModule
+Module = "2  byte input con  (0x91)" 0x91
+EndModule
+Module = "3  byte input con  (0x92)" 0x92
+EndModule
+Module = "4  byte input con  (0x93)" 0x93
+EndModule
+Module = "8  byte input con  (0x97)" 0x97
+EndModule
+Module = "12 byte input con  (0x9B)" 0x9B
+EndModule
+Module = "16 byte input con  (0x9F)" 0x9F
+EndModule
+Module = "20 byte input con  (0x40,0x93)" 0x40,0x93
+EndModule
+Module = "32 byte input con  (0x40,0x9F)" 0x40,0x9F
+EndModule
+Module = "64 byte input con  (0x40,0xBF)" 0x40,0xBF
+EndModule
+
+;*************************************************************************
+;***                input word with consistence                        ***
+;*************************************************************************
+
+Module = "1  word input con  (0xD0)" 0xD0
+EndModule
+Module = "2  word input con  (0xD1)" 0xD1
+EndModule
+Module = "3  word input con  (0xD2)" 0xD2
+EndModule
+Module = "4  word input con  (0xD3)" 0xD3
+EndModule
+Module = "8  word input con  (0xD7)" 0xD7
+EndModule
+Module = "12 word input con  (0xDB)" 0xDB
+EndModule
+Module = "16 word input con  (0xDF)" 0xDF
+EndModule
+Module = "20 word input con  (0x40,0xD3)" 0x40,0xD3
+EndModule
+Module = "32 word input con  (0x40,0xDF)" 0x40,0xDF
+EndModule
+Module = "64 word input con  (0x40,0xFF)" 0x40,0xFF
+EndModule
+
+;*************************************************************************
+;***                output byte with consistence                       ***
+;*************************************************************************
+
+Module = "1  byte output con (0xA0)" 0xA0
+EndModule
+Module = "2  byte output con (0xA1)" 0xA1
+EndModule
+Module = "3  byte output con (0xA2)" 0xA2
+EndModule
+Module = "4  byte output con (0xA3)" 0xA3
+EndModule
+Module = "8  byte output con (0xA7)" 0xA7
+EndModule
+Module = "12 byte output con (0xAB)" 0xAB
+EndModule
+Module = "16 byte output con (0xAF)" 0xAF
+EndModule
+Module = "20 byte output con (0x80,0x93)" 0x80,0x93
+EndModule
+Module = "32 byte output con (0x80,0x9F)" 0x80,0x9F
+EndModule
+Module = "64 byte output con (0x80,0xBF)" 0x80,0xBF
+EndModule
+
+;*************************************************************************
+;***                output word with consistence                       ***
+;*************************************************************************
+
+Module = "1  word output con (0xE0)" 0xE0
+EndModule
+Module = "2  word output con (0xE1)" 0xE1
+EndModule
+Module = "3  word output con (0xE2)" 0xE2
+EndModule
+Module = "4  word output con (0xE3)" 0xE3
+EndModule
+Module = "8  word output con (0xE7)" 0xE7
+EndModule
+Module = "12 word output con (0xEB)" 0xEB
+EndModule
+Module = "16 word output con (0xEF)" 0xEF
+EndModule
+Module = "20 word output con (0x80,0xD3)" 0x80,0xD3
+EndModule
+Module = "32 word output con (0x80,0xDF)" 0x80,0xDF
+EndModule
+Module = "64 word output con (0x80,0xFF)" 0x80,0xFF
+EndModule
+
+;*************************************************************************
+;***                input byte without consistence                     ***
+;*************************************************************************
+
+Module = "1  byte input   (0x10)" 0x10
+EndModule
+Module = "2  byte input   (0x11)" 0x11
+EndModule
+Module = "3  byte input   (0x12)" 0x12
+EndModule
+Module = "4  byte input   (0x13)" 0x13
+EndModule
+Module = "8  byte input   (0x17)" 0x17
+EndModule
+Module = "12 byte input   (0x1B)" 0x1B
+EndModule
+Module = "16 byte input   (0x1F)" 0x1F
+EndModule
+Module = "20 byte input   (0x40,0x13)" 0x40,0x13
+EndModule
+Module = "32 byte input   (0x40,0x1F)" 0x40,0x1F
+EndModule
+Module = "64 byte input   (0x40,0x3F)" 0x40,0x3F
+EndModule
+
+;*************************************************************************
+;***                input word without consistence                     ***
+;*************************************************************************
+
+Module = "1  word input   (0x50)" 0x50
+EndModule
+Module = "2  word input   (0x51)" 0x51
+EndModule
+Module = "3  word input   (0x52)" 0x52
+EndModule
+Module = "4  word input   (0x53)" 0x53
+EndModule
+Module = "8  word input   (0x57)" 0x57
+EndModule
+Module = "12 word input   (0x5B)" 0x5B
+EndModule
+Module = "16 word input   (0x5F)" 0x5F
+EndModule
+Module = "20 word input   (0x40,0x53)" 0x40,0x53
+EndModule
+Module = "32 word input   (0x40,0x5F)" 0x40,0x5F
+EndModule
+Module = "64 word input   (0x40,0x7F)" 0x40,0x7F
+EndModule
+
+;*************************************************************************
+;***                output byte without consistence                    ***
+;*************************************************************************
+
+Module = "1  byte output  (0x20)" 0x20
+EndModule
+Module = "2  byte output  (0x21)" 0x21
+EndModule
+Module = "3  byte output  (0x22)" 0x22
+EndModule
+Module = "4  byte output  (0x23)" 0x23
+EndModule
+Module = "8  byte output  (0x27)" 0x27
+EndModule
+Module = "12 byte output  (0x2B)" 0x2B
+EndModule
+Module = "16 byte output  (0x2F)" 0x2F
+EndModule
+Module = "20 byte output  (0x80,0x13)" 0x80,0x13
+EndModule
+Module = "32 byte output  (0x80,0x1F)" 0x80,0x1F
+EndModule
+Module = "64 byte output  (0x80,0x3F)" 0x80,0x3F
+EndModule
+
+;*************************************************************************
+;***                output word without consistence                    ***
+;*************************************************************************
+
+Module = "1  word output  (0x60)" 0x60
+EndModule
+Module = "2  word output  (0x61)" 0x61
+EndModule
+Module = "3  word output  (0x62)" 0x62
+EndModule
+Module = "4  word output  (0x63)" 0x63
+EndModule
+Module = "8  word output  (0x67)" 0x67
+EndModule
+Module = "12 word output  (0x6B)" 0x6B
+EndModule
+Module = "16 word output  (0x6F)" 0x6F
+EndModule
+Module = "20 word output  (0x80,0x53)" 0x80,0x53
+EndModule
+Module = "32 word output  (0x80,0x5F)" 0x80,0x5F
+EndModule
+Module = "64 word output  (0x80,0x7F)" 0x80,0x7F
+EndModule
