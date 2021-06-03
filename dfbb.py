@@ -15,10 +15,10 @@ decoders = {
 	('H', 'Actual value mill current', 'A'),
 	('H', 'Actual value feeder rotational speed in %', '%'),
 	('H', 'Actual value product temperature mixer outlet', '°C'),
-	('H', '-Actual value liquid 1', ''),
-	('H', 'Actual value liquid 2', ''),
-	('H', 'Actual value liquid 3', ''),
-	('H', 'Actual value gap roll adjustment', ''),
+	('H', 'Actual value liquid 1', 'kg/h'),
+	('H', 'Actual value liquid 2', 'kg/h'),
+	('H', 'Actual value liquid 3', 'kg/h'),
+	('H', 'Actual value gap roll adjustment', '1/10mm'),
 	('B', 'Phase in operating state 3 (only with retentioner)', ''),
 	('B', """Operating state of the DFBB
 0 = Idle position/pre-start
@@ -28,33 +28,33 @@ decoders = {
 4 = Operation
 5 = Shutdown""", ''),
 	('B', '0=Normal mode; 1=Hygienisation mode', ''),
-	('H', """Operating mode of the DFBB
+	('B', """Operating mode of the DFBB
 0 = Automatic mode local
 1 = Automatic mode Control system/Remote control
 2 = Maintenance mode""", ''),
 	('H', 'Position slide gate counter current cooler', ''),
-	('H', 'Actual value liquid 4', ''),
-	('L', 'Pressed flour amount', ''),
+	('H', 'Actual value liquid 4', 'kg/h'),
+	('L', 'Pressed flour amount', 'kg'),
 	('L', 'Actual value feed capacity ', 'kg/h'),
 	],
 
 	0xA105:
 	[
 	('H', 'Actual value Temperature mill inlet', '°C'),
-	('H', 'Actual value Temperature mill cavity', ''),
-	('H', 'Actual value Temperature cooler inlet', ''),
-	('H', 'Actual value Temperature cooler exhaust hood', ''),
+	('H', 'Actual value Temperature mill cavity', '°C'),
+	('H', 'Actual value Temperature cooler inlet', '°C'),
+	('H', 'Actual value Temperature cooler exhaust hood', '°C'),
 	('H', 'Reserve', ''),
-	('H', 'Actual value Temperature heating mats mixer', ''),
-	('H', 'Actual value Temperature heating mats retentioner 1', ''),
-	('H', 'Actual value Temperature heating mats retentioner 2', ''),
-	('H', 'Actual value Steam quantity', ''),
-	('H', 'Actual value Product temperature retentioner', ''),
-	('H', 'Fed liquid quantity 1', ''),
-	('H', 'Fed liquid quantity 2', ''),
-	('H', 'Fed liquid quantity 3', ''),
-	('H', 'Fed liquid quantity 4', ''),
-	('H', 'Actual value product temperature mixer inlet', ''),
+	('H', 'Actual value Temperature heating mats mixer', '°C'),
+	('H', 'Actual value Temperature heating mats retentioner 1', '°C'),
+	('H', 'Actual value Temperature heating mats retentioner 2', '°C'),
+	('H', 'Actual value Steam quantity', 'kg/h'),
+	('H', 'Actual value Product temperature retentioner', '°C'),
+	('H', 'Fed liquid quantity 1', 'kg'),
+	('H', 'Fed liquid quantity 2', 'kg'),
+	('H', 'Fed liquid quantity 3', 'kg'),
+	('H', 'Fed liquid quantity 4', 'kg'),
+	('H', 'Actual value product temperature mixer inlet', '°C'),
 	],
 
 	0xA201:
@@ -65,9 +65,9 @@ decoders = {
 	('H', 'Nominal value feeder rotational speed 2', '%'),
 	('H', 'Nominal value feeder rotational speed 3', '%'),
 	('H', 'Nominal value Product temperature mixer', '°C'),
-	('H', 'Nominal value Liquid 1', '%o'),
-	('H', 'Nominal value Liquid 2', '%o'),
-	('H', 'Nominal value Liquid 3', '%o'),
+	('H', 'Nominal value Liquid 1', '1/1000'),
+	('H', 'Nominal value Liquid 2', '1/1000'),
+	('H', 'Nominal value Liquid 3', '1/1000'),
 	('H', "Nominal value Working gap mill adjustment", '1/10mm'),
 	('H', 'Parameter set', ''),
 	('H', 'Throughput Counter current cooler DFKG', ''),
@@ -166,13 +166,16 @@ def main(watchdog=None):
 			if inData is None:
 				continue
 
+			rsp = struct.unpack('>H',inData[0:2])[0]
+			if req != rsp:
+				continue
+
 			resp_ctr += 1
 			if req in last_answer.keys() and inData == last_answer[req]:
 				print("Counter = {}\r".format(resp_ctr), end='')
 				continue
 
 			last_answer[req] = inData
-
 
 			print ("===== Request   ===================== 0x{:4X} =====".format(req))
 			print ("===== Response  ===================== 0x{:4X} =====".format(struct.unpack('>H',inData[0:2])[0]))
