@@ -141,6 +141,7 @@ def main(watchdog=None):
 
 		last_answer = {}
 		resp_ctr = 0
+		mismatch_ctr = 0
 
 		# Run the slave state machine.
 		for req in itertools.cycle(requests):
@@ -168,11 +169,12 @@ def main(watchdog=None):
 
 			rsp = struct.unpack('>H',inData[0:2])[0]
 			if req != rsp:
+				mismatch_ctr += 1
 				continue
 
 			resp_ctr += 1
 			if req in last_answer.keys() and inData == last_answer[req]:
-				print("Counter = {}\r".format(resp_ctr), end='')
+				print("Counter = {}, Mismatch = {}\r".format(resp_ctr, mismatch_ctr), end='')
 				continue
 
 			last_answer[req] = inData
