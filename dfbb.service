@@ -18,7 +18,7 @@ ExecStart=/usr/bin/python3 dfbb.py
 Environment=PYTHONUNBUFFERED=1
 
 # Automatically restart the service if it crashes
-Restart=on-failure
+Restart=always
 
 # Our service will notify systemd once it is up and running
 Type=simple
