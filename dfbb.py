@@ -4,6 +4,7 @@
 # This example can be run without any PB hardware.
 #
 
+import argparse
 import pyprofibus
 import time
 import struct
@@ -117,6 +118,10 @@ def on_disconnect():
 def main(watchdog=None):
 	master = None
 	client = None
+	parser = argparse.ArgumentParser()
+	parser.add_argument("-i", "--interactive", help="Interactive output to stderr", action="store_true")
+	args = parser.parse_args()
+
 	try:
 		# Parse the config file.
 		config = pyprofibus.PbConf.fromFile("dfbb.conf")
@@ -175,9 +180,9 @@ def main(watchdog=None):
 			while True:
 				# 20 ms looks like the absolute maximum that can be tolerated.
 				# Anything longer will make it just fail.
-				# So to be on the safe side just use 5ms.
+				# So to be on the safe side just use 10ms.
 				# This way we shouldn't have 100% CPU usage
-				time.sleep(0.005)
+				time.sleep(0.010)
 				# Feed the system watchdog, if it is available.
 				if watchdog is not None:
 					watchdog()
@@ -202,31 +207,30 @@ def main(watchdog=None):
 
 				rsp = struct.unpack('>H',inData[0:2])[0]
 				if req != rsp:
-					print("{} req={:04x}, rsp={:04x}".format(mismatch_ctr, req,rsp))
+					#print("{} req={:04x}, rsp={:04x}".format(mismatch_ctr, req,rsp))
 					mismatch_ctr += 1
 					continue
 
+				#print("{} req={:04x}, rsp={:04x}".format(mismatch_ctr, req,rsp))
+
 				resp_ctr += 1
+				unchanged = False
 				if req in last_answer.keys() and inData == last_answer[req]:
-					print("Counter = {}, Mismatch = {}\r".format(resp_ctr, mismatch_ctr), end='', flush=True)
-					continue
+					unchanged = True
+					if args.interactive: print("Counter = {}, Mismatch = {}\r".format(resp_ctr, mismatch_ctr), end='', flush=True)
 
 				last_answer[req] = inData
-
-				print ("===== Request   ===================== 0x{:4X} =====".format(req))
-				print ("===== Response  ===================== 0x{:4X} =====".format(struct.unpack('>H',inData[0:2])[0]))
 				# otherwise, decode answer
 				res_txt, res_json = decode_answer(inData)
-				for row in res_txt:
-					print(row)
 
-				print("publishing")
-				client.publish("dfbb/{}".format(req), payload=json.dumps(res_json))
+				if args.interactive and not unchanged:
+					print ("===== Request   ===================== 0x{:4X} =====".format(req))
+					print ("===== Response  ===================== 0x{:4X} =====".format(struct.unpack('>H',inData[0:2])[0]))
+					for row in res_txt:
+						print(row)
 
-				#print("Received data: " + str(inData))
-				# In our example the output data shall be the inverted input.
-				#outData[handledSlaveDesc.name][0] = inData[1]
-				#outData[handledSlaveDesc.name][1] = inData[0]
+				client.publish("dfbb/{:04x}".format(req), payload=json.dumps(res_json))
+
 				break
 
 	except pyprofibus.ProfibusError as e:
