@@ -115,7 +115,11 @@ def on_disconnect():
 
 
 
+PUBLISH_INTERVAL = 5
+STATS_INTERVAL = 60
+
 def main(watchdog=None):
+	last_stats_ts = None
 	master = None
 	client = None
 	parser = argparse.ArgumentParser()
@@ -170,6 +174,7 @@ def main(watchdog=None):
 		master.initialize()
 
 		last_answer = {}
+		last_publish_ts = {}
 		resp_ctr = 0
 		mismatch_ctr = 0
 
@@ -217,7 +222,13 @@ def main(watchdog=None):
 				unchanged = False
 				if req in last_answer.keys() and inData == last_answer[req]:
 					unchanged = True
-					if args.interactive: print("Counter = {}, Mismatch = {}\r".format(resp_ctr, mismatch_ctr), end='', flush=True)
+
+
+				ts = time.monotonic()
+
+				if args.interactive or (not last_stats_ts or ts >= last_stats_ts + STATS_INTERVAL):
+					print("Counter = {}, Mismatch = {}\r".format(resp_ctr, mismatch_ctr), end='', flush=True)
+					last_stats_ts = ts
 
 				last_answer[req] = inData
 				# otherwise, decode answer
@@ -229,8 +240,11 @@ def main(watchdog=None):
 					for row in res_txt:
 						print(row)
 
-				client.publish("dfbb/{:04x}".format(req), payload=json.dumps(res_json))
-
+				if req in last_publish_ts.keys() and ts < last_publish_ts[req] + PUBLISH_INTERVAL:
+					pass # do not publish
+				else:
+					client.publish("dfbb/{:04x}".format(req), payload=json.dumps(res_json))
+					last_publish_ts[req] = ts
 				break
 
 	except pyprofibus.ProfibusError as e:
